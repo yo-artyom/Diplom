@@ -10,7 +10,7 @@ $(function() {
     $("#answer-field").hide();
     $("#warning-text").hide();
     var     spectrum_points = [],
-        buf, buf_m = [], // в массиве хранятся текущие точки
+        buf, buf_m = [],
         a = [],
         peak_channel = 0,
         x_max = 1000,
@@ -30,12 +30,12 @@ $(function() {
 
     $("#build").click(function () {
         $("#answer").val("Ваш ответ");
-        spectrum_points.length = 0; //обнуляем старый массив точек
+        spectrum_points.length = 0;
         x_min=$("#x_min").val();
         x_max=$("#x_max").val();
         y_min=$("#y_min").val();
         y_max=$("#y_max").val();
-        time=$("#time").val(); //получаем параметры спектрометра
+        time=$("#time").val();
 
         if (x_min > x_max) {
             return false;
@@ -70,7 +70,23 @@ $(function() {
             colors: ["#FF7070"]
         };
         checked_radio=$('input[name="raz"]:checked').val();
-        check_isotope(checked_radio,last_checked_radio);
+        if (checked_radio != last_checked_radio) {
+            energy_1 = 0;
+            buf_m_set_zero(buf_m);
+            last_checked_radio = checked_radio;
+            peak_channel = number_to_energy(parseInt(checked_radio));
+            spectrum_points.length = 0;
+            a[1] = -1.38 * peak_channel + 4106;
+            a[2] = 0.0004 * peak_channel + 0.279;
+            a[3] = 0.9789 * peak_channel - 432;
+            a[4] = 0.032 * peak_channel + 21.44;
+            a[5] = 10000;
+            a[6] = peak_channel;
+            a[7] = 3;
+            a[12]= 0;
+            a[52]= 0;
+        }
+
         if (checked_radio == 5){
             energy_1 = number_to_energy_double_peak(parseInt(checked_radio));
             a[12] = -1.38 * energy_1 + 4106;
@@ -189,6 +205,7 @@ $(function() {
                 updateLegendTimeout = setTimeout(updateLegend, 50);
             }
         });
+        //показываем окно для ввода ответа
         $("#answer-field").slideDown();
         $("#warning-text").slideUp();
         if (checked_radio == 5 )
@@ -198,7 +215,7 @@ $(function() {
     $("#clear").click(function() {
         $("#answer-field").slideUp();
         $("#warning-text").slideUp();
-        var options = {
+        options = {
             series: {
                 lines: {show: false}
             }

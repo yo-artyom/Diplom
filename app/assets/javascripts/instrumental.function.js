@@ -74,26 +74,6 @@ function number_to_energy_double_peak(number) {
     return energy;
 }
 
-function check_isotope(checked_radio,last_checked_radio){
-  if (checked_radio != last_checked_radio) {
-        energy_1 = 0;
-        buf_m_set_zero(buf_m);
-        last_checked_radio = checked_radio;
-        peak_channel =
-            number_to_energy(parseInt(checked_radio));
-        spectrum_points.length = 0;
-        a[1] = -1.38 * peak_channel + 4106;
-        a[2] = 0.0004 * peak_channel + 0.279;
-        a[3] = 0.9789 * peak_channel - 432;
-        a[4] = 0.032 * peak_channel + 21.44;
-        a[5] = 10000;
-        a[6] = peak_channel;
-        a[7] = 3;
-        a[12]= 0;
-        a[52]= 0;
-  }
-}
-
 function check_channel( answer, peak_channel, peak_on_channel ){
     var buffer = 0;
     var right_answer = peak_on_channel * peak_channel;
