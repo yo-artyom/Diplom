@@ -1,3 +1,15 @@
+function getRandomData() {
+    var res = [];
+    var data = [];
+
+    for (var i = 0; i < 5000; ++i) {
+        data[i]=Math.random()*5000
+        res.push([i, data[i]])
+    }
+
+    return res;
+}
+
 function calc(x,a1,a2,a3,a4,g1,g2,g3,time){
     e_o_c = calibration();
     var g22 = g2/(1+2*g2/(1.022/e_o_c));
@@ -81,3 +93,4 @@ function check_channel( answer, peak_channel, peak_on_channel ){
         buffer = 1;
     return buffer;
 }
+

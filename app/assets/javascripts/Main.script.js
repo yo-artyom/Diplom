@@ -9,7 +9,7 @@ $(function() {
     }
     $("#answer-field").hide();
     $("#warning-text").hide();
-    var     spectrum_points = [],
+    var spectrum_points = [],
         buf, buf_m = [],
         a = [],
         peak_channel = 0,
@@ -49,13 +49,14 @@ $(function() {
             }
         var options = {
             series: {
-                points: {show: true}
+                points: {show: true},
+                shadowSize: 0
             },
-            crosshair: {mode: "x"},
-            grid: {
+            /*crosshair: {mode: "x"},*/
+            /*grid: {
                 hoverable: true,
                 autoHighlight: true
-            },
+            },*/
             yaxis: {
                 min: y_min,
                 max: y_max
@@ -99,25 +100,44 @@ $(function() {
         }
 
         for (var i = 0; i < 5000; i++) {
-            buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7],time);
-            if (energy_1 != 0){
-                buf +=  calc(i, a[12], a[22], a[32], a[42], a[52], a[62], a[72],time);
+            buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7],1);
+            if (energy_1 != 0){ //если это не 5 источник- добавляем ещё один пик
+                buf +=  calc(i, a[12], a[22], a[32], a[42], a[52], a[62], a[72],1);
             }
 
-            buf=buf_m[i]+buf+Puas(buf);
-            buf_m[i]=buf;
+            buf=buf_m[i]+buf+Puas(buf); // добавляем пуассона
+            buf_m[i]=buf; //запомониаем у
             spectrum_points.push([i, buf]);
-        }
-        /*
-        Если каналов больше чем 5000, то вывести окошко с предупреждением
-        if (x_max > 5000)
-            for (i = 5000; i<=x_max; i++)
-                spectrum_points.push([i, Puas(Math.random())])*/
+        } //вычисление 1ого шага
         plot = $.plot(placeholder, [
-            {data: spectrum_points, label: "spectr(x) = -0.00"},
-        ], options);
+            {data: spectrum_points/*, label: "spectr(x) = -0.00"*/},
+        ], options); //рисуем первый шаг
+        var updateInterval = 10; //интервал обновления, мс
+        var t = 0;
+        function update() {
+            /*if (t <= time){
+                t +=200;
+            */
+            for (var i = 0; i < 5000; i++) {
+                    buf = 2 * buf_m[i]; //копирую удваиваю старый массив
+                    buf_m[i] =buf;
+                    spectrum_points.push([i, buf]);
+                }
 
-        var legends = $("#placeholder .legendLabel");
+            plot = $.plot(placeholder, [
+                {data: getRandomData(), label: "spectr(x) = -0.00"},
+            ], options);
+
+            setTimeout(update, updateInterval);
+         /*   }
+            else{return false}*/
+        }
+
+        update();
+
+        //////////////////////////////////////////////////*/*
+        // */
+        /*var legends = $("#placeholder .legendLabel");
 
         legends.each(function () {
             // fix the widths so they don't jump around
@@ -130,10 +150,9 @@ $(function() {
         function updateLegend() {
 
             updateLegendTimeout = null;
-
             var pos = latestPosition;
-
             var axes = plot.getAxes();
+
             if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max ||
                 pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) {
                 return;
@@ -167,7 +186,7 @@ $(function() {
                 }
 
 
-                legends.eq(i).text(series.label.replace(/spectr(.*)=.*/, "spectr(" +pos.x.toFixed(0)
+                legends.eq(i).text(series.label.replace(/spectr(.*)=.*/ /* !, "spectr(" +pos.x.toFixed(0)
                 +") = "+ y.toFixed(0)));
             }
         }
@@ -191,7 +210,7 @@ $(function() {
                 plot.setupGrid();
                 plot.draw();
                 plot.clearSelection();
-                legends.eq(i).text(series.label.replace(/spectr(.*)=.*/, "spectr(" +pos.x.toFixed(0)
+                legends.eq(i).text(series.label.replace(/spectr(.*)=.*/ /*, "spectr(" +pos.x.toFixed(0)
                 +") = "+ y.toFixed(0)));
 
 
@@ -243,5 +262,5 @@ $(function() {
     $("#test").click(function(){
 
         $("#text-field").val(answer);
-    });
+    */});
 });
