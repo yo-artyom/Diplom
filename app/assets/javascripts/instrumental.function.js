@@ -1,14 +1,4 @@
-function getRandomData() {
-    var res = [];
-    var data = [];
 
-    for (var i = 0; i < 5000; ++i) {
-        data[i]=Math.random()*5000
-        res.push([i, data[i]])
-    }
-
-    return res;
-}
 
 function calc(x,a1,a2,a3,a4,g1,g2,g3,time){
     e_o_c = calibration();

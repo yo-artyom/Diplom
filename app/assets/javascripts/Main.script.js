@@ -100,30 +100,41 @@ $(function() {
         }
 
         for (var i = 0; i < 5000; i++) {
-            buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7],1);
+            buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7],500);
             if (energy_1 != 0){ //если это не 5 источник- добавляем ещё один пик
-                buf +=  calc(i, a[12], a[22], a[32], a[42], a[52], a[62], a[72],1);
+                buf +=  calc(i, a[12], a[22], a[32], a[42], a[52], a[62], a[72],500);
             }
 
-            buf=buf_m[i]+buf+Puas(buf); // добавляем пуассона
+            buf=buf_m[i]+buf;/*+Puas(buf); // добавляем пуассона*/
             buf_m[i]=buf; //запомониаем у
             spectrum_points.push([i, buf]);
         } //вычисление 1ого шага
         plot = $.plot(placeholder, [
             {data: spectrum_points/*, label: "spectr(x) = -0.00"*/},
         ], options); //рисуем первый шаг
-        var updateInterval = 10; //интервал обновления, мс
+
+        var updateInterval = 50; //интервал обновления, мс
+        var data = [];
+        buf_m_set_zero(data);
+        function getRandomData() {
+            var res = [];
+
+            for (var i = 0; i < 5000; i++) {
+                buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7],500);
+                buf = buf + Puas(buf);
+                data[i]=data[i]+buf;
+                buf = data[i];
+                res.push([i, buf]);
+            }
+            return res;
+
+        }
+
         var t = 0;
         function update() {
             /*if (t <= time){
                 t +=200;
             */
-            for (var i = 0; i < 5000; i++) {
-                    buf = 2 * buf_m[i]; //копирую удваиваю старый массив
-                    buf_m[i] =buf;
-                    spectrum_points.push([i, buf]);
-                }
-
             plot = $.plot(placeholder, [
                 {data: getRandomData(), label: "spectr(x) = -0.00"},
             ], options);
