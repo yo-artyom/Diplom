@@ -9,34 +9,36 @@ $(function() {
     }
     $("#answer-field").hide();
     $("#warning-text").hide();
-    var spectrum_points = [],
-        buf, buf_m = [],
-        a = [],
-        peak_channel = 0,
-        x_max = 1000,
+    var spectrum_points = [],// [канал, отсчеты]
+        buf,    //буфер для вычислений
+        buf_m = [], //буфер для хранения последних значений отсчётов
+        peak_channel = 0, //канал пика
+        x_max = 1000, 
         x_min = 0,
         y_max = 5000,
-        y_min = 0,
-        last_checked_radio = 9696,
-        checked_radio,
-        full_time = 0,
-        time = 1000,
+        y_min = 0,//стандартоное значение параметров
+        last_checked_radio = 9696, //последний выбраный изотоп
+        checked_radio, //выбранный изотоп в этом цикле измерений
+        full_time = 0, //полное время измерения
+        time = 1000, //время в текущем выборе измеренй
         plot,
-        updateInterval = 50, //интервал обновления, мс
-        energy_1;
-    var data = [];
+        a = [],
+        updateInterval = 50; //интервал обновления, мс
+
+    var data = []; //массив для динамического обновления
     var placeholder = $("#placeholder");
 
     array_set_zero(buf_m);
 
     $("#build").click(function () {
+        var second_channel_of_photopeak = 0;
         $("#answer").val("Ваш ответ");
         spectrum_points.length = 0;
         x_min = $("#x_min").val();
         x_max = $("#x_max").val();
         y_min = $("#y_min").val();
         y_max = $("#y_max").val();
-        time = $("#time").val();
+        time = $("#time").val(); //снимаем параметры
 
         if (x_min > x_max) {
             return false;
@@ -48,6 +50,7 @@ $(function() {
             x_min = 0;
             $("#x_min").val(0);
         }
+        //валидация параметров
         var options = {
             series: {
                 points: {show: true},
@@ -59,7 +62,7 @@ $(function() {
                 autoHighlight: true
             },
             yaxis: {
-                min: y_min,
+                min: -200,
                 max: y_max
             },
             xaxis: {
@@ -70,19 +73,19 @@ $(function() {
                 mode: "x"
             },
             colors: ["#FF7070"]
-        };
+        };//параметры графика
         checked_radio = $('input[name="raz"]:checked').val(); //какой номер выбран
         if (checked_radio != last_checked_radio) {
-
-            energy_1 = 0;
+            //если изменился изотоп, то зануляем параметры и пересчитываем аппаратную функцию
+            second_channel_of_photopeak = 0;
             array_set_zero(buf_m);
             last_checked_radio = checked_radio;
-            peak_channel = number_to_energy(parseInt(checked_radio));
+            peak_channel = energy_to_channel(parseInt(checked_radio));
             spectrum_points.length = 0;
             full_time = 0;
 
-
-            a[1] = -1.38 * peak_channel + 4106;
+            //аппаратная функция спектрометра
+            a[1] = 1.38 * peak_channel + 4106;
             a[2] = 0.0004 * peak_channel + 0.279;
             a[3] = 0.9789 * peak_channel - 432;
             a[4] = 0.032 * peak_channel + 21.44;
@@ -92,21 +95,21 @@ $(function() {
             a[12] = 0;
             a[52] = 0;
         } //проверка обновления источника
-
+        //если это изотоп с двойным пиком- добавляем точек
         if (checked_radio == 5) {
-            energy_1 = number_to_energy_double_peak(parseInt(checked_radio));
-            a[12] = -1.38 * energy_1 + 4106;
-            a[22] = 0.0004 * energy_1 + 0.279;
-            a[32] = 0.9789 * energy_1 - 432;
-            a[42] = 0.032 * energy_1 + 21.44;
+            second_channel_of_photopeak = energy_to_channel_double_peak(parseInt(checked_radio));
+            a[12] = 1.38 * second_channel_of_photopeak + 4106;
+            a[22] = 0.0004 * second_channel_of_photopeak + 0.279;
+            a[32] = 0.9789 * second_channel_of_photopeak - 432;
+            a[42] = 0.032 * second_channel_of_photopeak + 21.44;
             a[52] = 10000;
-            a[62] = energy_1;
+            a[62] = second_channel_of_photopeak;
             a[72] = 1;
         } //двойной распад
 
-        for (var i = 0; i < 5000; i++) {
+        for (var i = 0; i < 5000; i+= 3) {
             buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7], 500);
-            if (energy_1 != 0) { //если это не 5 источник- добавляем ещё один пик
+            if (second_channel_of_photopeak != 0) { //если это не 5 источник- добавляем ещё             один пик
                 buf += calc(i, a[12], a[22], a[32], a[42], a[52], a[62], a[72], 500);
             }
 
@@ -121,10 +124,10 @@ $(function() {
 
 
         array_set_zero(data);
-        function getSpectrumData() {
+        function getSpectrumData() { //получаем значения спектра
             var res = [];
-            for (var i = 0; i < 5000; i++) {
-                buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7], 100);//посчитали шаг
+            for (var i = 0; i < 5000; i+= 3) {
+                buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7], 20);//посчитали шаг
                 buf = buf + Puas(buf);  //зашумили шаг
                 buf_m[i] = buf_m[i] + buf;  //к старому спектру добавили текущий шаг
                 buf = buf_m[i];
@@ -133,10 +136,8 @@ $(function() {
             return res;
 
         } //обновление точек спектра
-
         var t = 0; //зануляем время текущего цикла
-        //////////////////!//////////////////////
-        function update() {
+        function update() { //обновление графика
 
             if (t < time-100) {
                 t += 100;
@@ -149,12 +150,10 @@ $(function() {
                 setTimeout(update, updateInterval);
 
             }
-        } //обновление графика
+        }
         update();
 
         t = 0;
-
-        //////////////////!//////////////////////
 
 
 
@@ -189,10 +188,9 @@ $(function() {
             }
         });
         $("#answer-field").slideDown();
-        $("#warning-text").slideUp();
-        if (checked_radio == 5)
-            $("#warning-text").slideDown();
+        $("#warning-text").slideUp(); //окошки для ответов
 
+        //flot www.flotcharts.org/flot/examples/tracking/index.html
         var legends = $("#placeholder .legendLabel");
 
         legends.each(function () {
@@ -243,7 +241,7 @@ $(function() {
 
 
                 legends.eq(i).text(series.label.replace(/spectr(.*)=.*/, "spectr(" + pos.x.toFixed(0)
-                + ") = " + y.toFixed(0)));
+                + ") = " + y.toFixed(0))); //заменяем поле информации канал(спектр)
             }
         }
 
@@ -252,7 +250,7 @@ $(function() {
 
 
 
-    $("#clear").click(function () {
+    $("#clear").click(function () { //кнопка сброс
         $("#answer-field").slideUp();
         $("#warning-text").slideUp();//прячем поля для ответов
         full_time = 0;
@@ -274,8 +272,7 @@ $(function() {
 
 
 
-    $("#check").click(function () {
-
+    $("#check").click(function () { // первая задача, проверка неизвестного источника
         var answer = $("#answer").val();
 
         var right_answer = calibration() * peak_channel;

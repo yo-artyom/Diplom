@@ -28,54 +28,67 @@ function Puas(P){
     return k;
 } //зашумление по пуассону
 
-/*function random_cs_peak(x_min){ //случайное положение для пика цезия
-    do
+/*function random_peak(photopeak_channel){ //случайное положение для пика цезия
+    var random_photopeak_channel;
+    switch (photopeak_channel) {
+        case 1537:
+            do
+                random_photopeak_channel = photopeak_channel*Math.random();
+            while (random_photopeak_channel <800 );
+            break;
+        case 2940:
+            do
+                random_photopeak_channel = photopeak_channel*Math.random();
+            while (random_photopeak_channel < 1537 );
+            break;
+        return random_photopeak_channel
+    }
+
+        do
         cs_peak_channel = 1527*Math.random();
-    while ((cs_peak_channel <= x_min+200)); //минимум 800,чтобы не прижимать спектр к левой границе видимой области
-    //можно брать X_min+ const в качетсвте минимума
+    while ((cs_peak_channel <= 800)); //минимум 800,чтобы не прижимать спектр к левой границе видимой области
+    //можно брать X_min + const в качетсвте минимума
     return cs_peak_channel
 }*/
+
 function calibration(){ //в качестве входных параметров- энергия пика цезия
-    cs_peak_channel =1527;
+        cs_peak_channel = 1537;
     var cs_decay_energy = 0.6617; // энергия распада цезия
     var na_peak_channel = 2940;   //пересчитываем энергию натрия
     var na_decay_energy = 1.27;   //энергия рапспада натрия
-    var energy_on_channel =(na_decay_energy - cs_decay_energy) / (na_peak_channel-cs_peak_channel);
+    var energy_on_channel =(na_decay_energy - cs_decay_energy) /
+       (na_peak_channel-cs_peak_channel);
+    //энергия приходящееся на 1 канал текущего спектрометра
     return energy_on_channel;
 }
 
-function number_to_energy(number){
+function energy_to_channel(number){
     var energy;
     switch (number) {
-        case 1:
-            energy = 1527;break;
+         case 1:
+            energy = 0.6617 / calibration();break;
         case 2:
-            energy = 2900;break;
+            energy = 1.27 / calibration();break;
         case 3:
-            energy = 1200;break;
+            energy = 0.8 / calibration();break;
         case 4:
-            energy = 1400;break;
+            energy = 0.9 / calibration();break;
         case 5:
-            energy = 2100;break;
+            energy = 1.17 /  calibration();break;
         default :
             energy = 2000;break;
     }
     return energy;
-}
+} //проверка номера изотопа, и передача его номера канала
 
-function array_set_zero(buf_m){
+function array_set_zero(array){
     for (var i = 0; i < 5000; i++) {
-        buf_m[i] = 0;
+        array[i] = 0;
     }
 }
 
-function number_to_energy_double_peak(number) {
-    var energy;
-    switch (number) {
-        case 5:
-            energy = 1200;break;
-    }
-    return energy;
+function energy_to_channel_double_peak() {
+    return 1.55 / calibration();
 }
 
 function check_channel( answer, peak_channel, peak_on_channel ){
