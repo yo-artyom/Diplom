@@ -3,7 +3,40 @@
 body {
 	background: url(background.png) repeat-x;
 	font: 18px/1.5em "proxima-nova", Helvetica, Arial, sans-serif;
+    display: inline;
 }
+#header{
+    display: inline-block;
+}
+#r1,#r2,#r3,#r4,#r5,#r6{
+    display: inline-block;
+
+}
+.time-row{
+    font-size: 1.2em;
+    width: 100%;
+    text-align: left;
+
+    padding-left: 1% ;
+    display: block;
+    border-bottom: 1px solid #000000;
+}
+.time-row  p{
+    padding-left: 1% ;
+    display: inline-block;
+
+}
+.time-row > .cc{
+    width: 50%;
+    display: inline-block;
+    border-right: 1px solid black;
+    text-align: center;
+}
+#full-time{
+    width: 48%;
+    text-align: center;
+}
+
 
 
 
@@ -22,12 +55,13 @@ h3 {
 }
 
 p {
-	margin-top: 10px;
+
 }
 
 button {
 	font-size: 18px;
 	padding: 1px 7px;
+
 }
 
 input {
@@ -41,6 +75,7 @@ input[type=checkbox] {
 #header {
 	position: relative;
 	margin: auto;
+
     font-size: 20px;
     align: center;
 }
@@ -54,11 +89,7 @@ input[type=checkbox] {
 	color: #000;
 }
 
-#content {
-	width: 880px;
-	margin: 0 auto;
-	padding: 10px;
-}
+
 
 #footer {
 	margin-top: 25px;
@@ -67,48 +98,83 @@ input[type=checkbox] {
 	font-size: 12px;
 	color: #999;
 }
+
+
+
 .spectrometr{
     margin-top: 1%;
-    height: 450px;
-    border: 1px solid #252727;
+    width: 100%;
+    border: 1px  solid #252727;
+    height: 70%;
 }
 .left_col{
     float: left;
-    width: 25%;
-    height: 452px;
+    display: table;
+    height: 100%;
+    width: 20%;
     position: relative;
+    border-right: 1px solid #000000;
 
 
 }
 .param{
-    height: 50%;
-    border-right: 1px solid #252727;
-    border-bottom: 1px solid #252727;
 
-}
-
-#definition{
-    padding-top: 3%;
-
-
-}
-#definition.input{
+    height: 25%;
     width: 100%;
+    border-bottom: 1px solid #000000;
+    padding-bottom: 2%;
 }
-.label{
-    font-color: #2288bb;
+.param p{
+    margin-top: 1%;
+    margin-left: 4%;
+    display: inline-block;
+    text-align: center;
+}
+#x_min,#x_max,#y_max,#time{
+
+    float: left;
+    width: 50%;
+    text-align: center;
+
+}
+.zoom{
+    display: table;
+    text-align: center;
+    padding-bottom: 5%;
+    width: 100%;
+    border-bottom: 1px solid #000000;
+}
+#buttons{
+    display: table;
+    align: center;
+    margin-left: 4%;
 }
 
-#buttons{
-    height: 50%;
-    border-right: 1px solid #252727;
+#answer-field{
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    padding-bottom: 2%;
 }
+
+#answer{
+    width: 50%;
+    margin-right: 9px;
+    height: 31px;
+    text-align: center;
+    display: table;
+    float: left;
+}
+#check{
+    display: table;
+}
+
 .demo-container {
 	box-sizing: border-box;
-	width: 65%;
-	height: 415px;
+	width: 70%;
+	height: 90%;
 	padding: 20px 15px 15px 15px;
-	margin: 15px auto 30px auto;
+	margin: 2% 2% 2% 0%;
 	border: 1px solid #ddd;
 	background: #fff;
 	background: linear-gradient(#f6f6f6 0, #fff 50px);
@@ -123,7 +189,7 @@ input[type=checkbox] {
 	-webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     float: left;
     text-align: center;
-    margin-left: 5%;!important;
+    margin-left: 5%;
 }
 
 .demo-placeholder {
@@ -146,21 +212,15 @@ input[type=checkbox] {
     margin-left: 1%;
 }
 
-.buttons{
-    margin-top: 500px;
 
-}
-#zoom{
-    font-size: 12px;
-}
+
 .build-buttons{
-    padding-top: 20px;
+     margin-top: 10px   ;
+    text-align: center;
+
     margin-bottom: 10px;
 }
-#answer{
-    width: 80%;
-    text-align: center;
-}
+
 #warning-text{
     font-size: 12px;
 }
@@ -182,9 +242,7 @@ input[type=checkbox] {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
     margin: 20px auto;
 
-    -webkit-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
-    -moz-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
-    box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+
     position: relative;
 }
 

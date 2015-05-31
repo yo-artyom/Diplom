@@ -1,10 +1,12 @@
+var cs_peak_channel;
 
+function calc(x,a1,a2,a3,a4,g1,g2,g3,time){ //
+    var energy_on_channel = calibration();
 
-function calc(x,a1,a2,a3,a4,g1,g2,g3,time){
-    e_o_c = calibration();
-    var g22 = g2/(1+2*g2/(1.022/e_o_c));
+    var g22 = g2/(1+2*g2/(1.022/energy_on_channel));
     g12 = 10000*Math.random();
-    g32 = 20*Math.random();
+    g32 = 20*Math.random(); // пик обратного рассеяния
+
     var t1 = Math.exp((x-a3)/a4);
     var t2 = (1+a2*a2*t1);
     var t3 = (t1+Math.pow((1-a2*t1),2));
@@ -12,7 +14,7 @@ function calc(x,a1,a2,a3,a4,g1,g2,g3,time){
     var t5 = g12*Math.exp(-Math.pow(((x-g22)/g32),2));
     var k = Math.round((a1*Math.pow(t2/t3,0.5)+t4+t5) / 10000*time);
     return k;
-}
+} //вычисление отсчетов от времени
 
 function Puas(P){
     var j1 = Math.exp(-P);
@@ -24,23 +26,23 @@ function Puas(P){
         n1 = n1 *Math.random();
     }
     return k;
-}
-function random_cs_peak(x_min){ //случайное положение для пика цезия
-    var cs_peak_channel
+} //зашумление по пуассону
+
+/*function random_cs_peak(x_min){ //случайное положение для пика цезия
     do
         cs_peak_channel = 1527*Math.random();
     while ((cs_peak_channel <= x_min+200)); //минимум 800,чтобы не прижимать спектр к левой границе видимой области
     //можно брать X_min+ const в качетсвте минимума
     return cs_peak_channel
-}
+}*/
 function calibration(){ //в качестве входных параметров- энергия пика цезия
+    cs_peak_channel =1527;
     var cs_decay_energy = 0.6617; // энергия распада цезия
     var na_peak_channel = 2940;   //пересчитываем энергию натрия
     var na_decay_energy = 1.27;   //энергия рапспада натрия
-    var energy_on_channel =(na_decay_energy - cs_decay_energy) / (na_peak_channel-random_cs_peak());
+    var energy_on_channel =(na_decay_energy - cs_decay_energy) / (na_peak_channel-cs_peak_channel);
     return energy_on_channel;
 }
-
 
 function number_to_energy(number){
     var energy;
@@ -61,7 +63,7 @@ function number_to_energy(number){
     return energy;
 }
 
-function buf_m_set_zero(buf_m){
+function array_set_zero(buf_m){
     for (var i = 0; i < 5000; i++) {
         buf_m[i] = 0;
     }
