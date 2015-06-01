@@ -23,6 +23,7 @@ $(function() {
         time = 1000, //время в текущем выборе измеренй
         plot,
         a = [],
+        timeout,
         updateInterval = 50; //интервал обновления, мс
 
     var data = []; //массив для динамического обновления
@@ -156,7 +157,8 @@ $(function() {
                     {data: getSpectrumData(), label: "spectr(x) = -0.00"},
                 ], options);
                 $("#points-info").click();
-                setTimeout(update, updateInterval);
+
+                timeout = setTimeout(update, updateInterval);
             }
         }
         update();
@@ -250,7 +252,10 @@ $(function() {
 
     });
 
+
+
     $("#clear").click(function () { //кнопка сброс
+        clearTimeout(timeout);
         $("#answer-field").slideUp();
         $("#warning-text").slideUp();//прячем поля для ответов
         full_time = 0;

@@ -7,6 +7,9 @@ body {
 }
 #header{
     display: inline-block;
+    text-align: center;
+    width: 100%;
+    font-size: 1.2em;
 }
 #r1,#r2,#r3,#r4,#r5,#r6{
     display: inline-block;
@@ -19,17 +22,16 @@ body {
     padding-left: 1% ;
     margin-bottom: 5%;
     display: block;
-    border-bottom: 1px solid #000000;
+    border-bottom: 1px solid #1a6b1c;
 }
 .time-row  p{
     padding-left: 1% ;
     display: inline-block;
-
 }
 .time-row > .cc{
     width: 50%;
     display: inline-block;
-    border-right: 1px solid black;
+    border-right: 1px solid #1a6b1c;
     text-align: center;
 }
 #full-time{
@@ -72,39 +74,12 @@ input[type=checkbox] {
 	margin: 7px;
 }
 
-#header {
-	position: relative;
-	margin: auto;
-
-    font-size: 20px;
-    align: center;
-}
-
-#header h2 {
-	margin-left: 10px;
-	vertical-align: middle;
-	font-size: 42px;
-	font-weight: bold;
-	text-decoration: none;
-	color: #000;
-}
-
-
-
-#footer {
-	margin-top: 25px;
-	margin-bottom: 10px;
-	text-align: center;
-	font-size: 12px;
-	color: #999;
-}
-
 
 
 .spectrometr{
     margin-top: 1%;
     width: 100%;
-    border: 1px  solid #252727;
+    border: 1px  solid #1a6b1c;
     height: 85%;
 }
 .left_col{
@@ -114,7 +89,7 @@ input[type=checkbox] {
     width: 20%;
     overflow: hidden;
     position: relative;
-    border-right: 1px solid #000000;
+    border-right: 1px solid #1a6b1c;
 
 
 }
@@ -123,7 +98,7 @@ input[type=checkbox] {
     margin-top: 2%;
     height: 28%;
     width: 100%;
-    border-bottom: 1px solid #000000;
+    border-bottom: 1px solid #1a6b1c;
     padding-bottom: 2%;
 }
 .param p{
@@ -131,6 +106,8 @@ input[type=checkbox] {
     margin-left: 4%;
     display: inline-block;
     text-align: center;
+    font-family: Helvetica, Arial, Sans-Serif;
+    font-size: 1.2em;
 }
 #x_min,#x_max,#y_max,#time{
 
@@ -146,7 +123,7 @@ input[type=checkbox] {
     text-align: center;
     padding-bottom: 5%;
     width: 100%;
-    border-bottom: 1px solid #000000;
+    border-bottom: 1px solid #1a6b1c;
 }
 #buttons{
     display: table;
@@ -295,20 +272,31 @@ input[type=checkbox] {
     -moz-border-radius: 28px;
     border-radius: 28px;
     font-family: Arial;
-    color: #ffffff;
     width: 48%;
-    background: #209a31;
+    border: 2px solid #209a31 !important;
+    color: #222222;
+    background: none;
     padding: 5px 10px 5px 10px;
     text-decoration: none;
     border: hidden;
+    font-size: 1em;
+    font-weight: 700;
 }
 .btn.info{
     width: 60%;
     display: none;
 }
 .btn:hover {
-    background: #3cb0fd;
+    border: 2px solid #35ff51 !important;
+}
+#clear{
+    margin-top: 2%;
+    margin-left: 25%;
 
+}
+
+#answer-field{
+    width: 100%;
 }
 .answer{
     width: 100%;
@@ -324,4 +312,6 @@ input[type=checkbox] {
     float: left;
     display: inline-block;
 }
+
+
 
