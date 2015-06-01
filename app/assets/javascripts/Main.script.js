@@ -72,7 +72,7 @@ $(function() {
             selection: {
                 mode: "x"
             },
-            colors: ["#FF7070"]
+            colors: ["#209a31"]
         };//параметры графика
         checked_radio = $('input[name="raz"]:checked').val(); //какой номер выбран
         if (checked_radio != last_checked_radio) {
@@ -85,11 +85,13 @@ $(function() {
             full_time = 0;
 
             //аппаратная функция спектрометра
-            a[1] = 1.38 * peak_channel + 4106;
+            a[1] = -1.38 * peak_channel + 4106;
             a[2] = 0.0004 * peak_channel + 0.279;
             a[3] = 0.9789 * peak_channel - 432;
             a[4] = 0.032 * peak_channel + 21.44;
-            a[5] = 10000;
+            do
+            a[5] = 12000*Math.random();
+            while (a[5]<8000);
             a[6] = peak_channel;
             a[7] = 3;
             a[12] = 0;
@@ -98,7 +100,7 @@ $(function() {
         //если это изотоп с двойным пиком- добавляем точек
         if (checked_radio == 5) {
             second_channel_of_photopeak = energy_to_channel_double_peak(parseInt(checked_radio));
-            a[12] = 1.38 * second_channel_of_photopeak + 4106;
+            a[12] = 1.38 * second_channel_of_photopeak - 4106;
             a[22] = 0.0004 * second_channel_of_photopeak + 0.279;
             a[32] = 0.9789 * second_channel_of_photopeak - 432;
             a[42] = 0.032 * second_channel_of_photopeak + 21.44;
@@ -107,14 +109,12 @@ $(function() {
             a[72] = 1;
         } //двойной распад
 
-        for (var i = 0; i < 5000; i+= 3) {
-            buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7], 500);
+        for (var i = 0; i < 5000; i+= 1) {
+            buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7], 100);
             if (second_channel_of_photopeak != 0) { //если это не 5 источник- добавляем ещё             один пик
-                buf += calc(i, a[12], a[22], a[32], a[42], a[52], a[62], a[72], 500);
+                buf += calc(i, a[12], a[22], a[32], a[42], a[52], a[62], a[72], 100);
             }
-
-            buf = buf_m[i] + buf;
-            /*+Puas(buf); // добавляем пуассона*/
+            buf += buf_m[i] ;
             buf_m[i] = buf; //запомониаем у
             spectrum_points.push([i, buf]);
         } //вычисление 1ого шага
@@ -126,36 +126,40 @@ $(function() {
         array_set_zero(data);
         function getSpectrumData() { //получаем значения спектра
             var res = [];
-            for (var i = 0; i < 5000; i+= 3) {
-                buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7], 20);//посчитали шаг
+            for (var i = 0; i < 5000; i+= 1) {
+                //i+= Math.floor(3*Math.random());
+                buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7], 500);//посчитали шаг
+                if (second_channel_of_photopeak != 0) { //если это не 5 источник- добавляем ещё             один пик
+                    buf += calc(i, a[12], a[22], a[32], a[42], a[52], a[62], a[72], 500);
+                }
                 buf = buf + Puas(buf);  //зашумили шаг
-                buf_m[i] = buf_m[i] + buf;  //к старому спектру добавили текущий шаг
+
+
+                buf_m[i] += buf;  //к старому спектру добавили текущий шаг
                 buf = buf_m[i];
                 res.push([i, buf]);
+                spectrum_points.push([i, buf]);
             }
             return res;
 
         } //обновление точек спектра
-        var t = 0; //зануляем время текущего цикла
+        var t = 0; //время текущего цикла( первый шаг уже посчитан)
+
+        $("#full-time").text(full_time+" cек");
         function update() { //обновление графика
 
-            if (t < time-100) {
+            if (t < time) {
                 t += 100;
                 full_time += 100;
                 $("#full-time").text(full_time+" cек");
                 plot = $.plot(placeholder, [
                     {data: getSpectrumData(), label: "spectr(x) = -0.00"},
                 ], options);
-
+                $("#points-info").click();
                 setTimeout(update, updateInterval);
-
             }
         }
         update();
-
-        t = 0;
-
-
 
         placeholder.bind("plotunselected", function (event) {
             $("#selection").text("");
@@ -175,37 +179,30 @@ $(function() {
                 plot.setupGrid();
                 plot.draw();
                 plot.clearSelection();
-                legends.eq(i).text(series.label.replace(/spectr(.*)=.*/, "spectr(" +pos.x.toFixed(0)
-                +") = "+ y.toFixed(0)));
-
+                $("#points-info").trigger("click")
             }
         });
         ////////////////////
-        placeholder.bind("plothover", function (event, pos, item) {
-            latestPosition = pos;
-            if (!updateLegendTimeout) {
-                updateLegendTimeout = setTimeout(updateLegend, 50);
-            }
-        });
+
         $("#answer-field").slideDown();
         $("#warning-text").slideUp(); //окошки для ответов
 
-        //flot www.flotcharts.org/flot/examples/tracking/index.html
-        var legends = $("#placeholder .legendLabel");
 
+
+        $("#points-info").trigger("click")
+    });
+
+    $("#points-info").click(function () {
+        var legends = $("#placeholder .legendLabel");
         legends.each(function () {
             // fix the widths so they don't jump around
             $(this).css('width', $(this).width());
         });
-
         var updateLegendTimeout = null;
         var latestPosition = null;
-
         function updateLegend() {
             updateLegendTimeout = null;
-
             var pos = latestPosition;
-
             var axes = plot.getAxes();
             if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max ||
                 pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) {
@@ -244,11 +241,14 @@ $(function() {
                 + ") = " + y.toFixed(0))); //заменяем поле информации канал(спектр)
             }
         }
-
+        $("#placeholder").bind("plothover",  function (event, pos, item) {
+            latestPosition = pos;
+            if (!updateLegendTimeout) {
+                updateLegendTimeout = setTimeout(updateLegend, 50);
+            }
+        });
 
     });
-
-
 
     $("#clear").click(function () { //кнопка сброс
         $("#answer-field").slideUp();
