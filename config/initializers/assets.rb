@@ -9,6 +9,7 @@ Rails.application.config.assets.precompile += %w( instrumental.function.js)
 Rails.application.config.assets.precompile += %w( examples.css )
 Rails.application.config.assets.precompile += %w( jquery.flot.selection.js )
 Rails.application.config.assets.precompile += %w( Main.script.js )
+Rails.application.config.assets.precompile += %w( adaptive.css )
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 # Rails.application.config.assets.precompile += %w( search.js )

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal">
-    <data-source name="Rails Dip: development" uuid="1a0c4653-5f3a-4e04-b097-0faf121d8987">
-      <first-sync>true</first-sync>
-    </data-source>
+    <data-source name="Rails Dip: development" uuid="1a0c4653-5f3a-4e04-b097-0faf121d8987" />
   </component>
 </project>

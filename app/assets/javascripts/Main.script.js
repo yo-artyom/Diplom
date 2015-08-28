@@ -11,12 +11,14 @@ $(function() {
     $("#warning-text").hide();
     var spectrum_points = [],// [канал, отсчеты]
         buf,    //буфер для вычислений
-        buf_m = [], //буфер для хранения последних значений отсчётов
+        buf_m = new Array(5000), //буфер для хранения последних значений отсчётов
         peak_channel = 0, //канал пика
-        x_max = 1000, 
+
+        x_max = 1000,  //разрешение спектрометра
         x_min = 0,
         y_max = 5000,
         y_min = 0,//стандартоное значение параметров
+
         last_checked_radio = 9696, //последний выбраный изотоп
         checked_radio, //выбранный изотоп в этом цикле измерений
         full_time = 0, //полное время измерения
@@ -24,12 +26,17 @@ $(function() {
         plot,
         a = [],
         timeout,
-        updateInterval = 50; //интервал обновления, мс
+        updateInterval = 800; //интервал обновления, мс
 
     var data = []; //массив для динамического обновления
     var placeholder = $("#placeholder");
-
     array_set_zero(buf_m);
+
+
+    //----Задаем цвет кнопки после нажатия-----////////
+    $('.btn').click(function(){
+        $(this).addClass('active');
+    });
 
     $("#build").click(function () {
         var second_channel_of_photopeak = 0;
@@ -40,18 +47,19 @@ $(function() {
         y_min = $("#y_min").val();
         y_max = $("#y_max").val();
         time = $("#time").val(); //снимаем параметры
-
+        //валидация параметров
         if (x_min > x_max) {
             return false;
         }
         if (x_max > 5000) {
             x_max = 5000;
+            $("#x_max").val(5000);
         }
         if (x_min < 0) {
             x_min = 0;
             $("#x_min").val(0);
         }
-        //валидация параметров
+
         var options = {
             series: {
                 points: {show: true},
@@ -75,7 +83,9 @@ $(function() {
             },
             colors: ["#209a31"]
         };//параметры графика
-        checked_radio = $('input[name="raz"]:checked').val(); //какой номер выбран
+
+        checked_radio = $('input[name="raz"]:checked').val(); //какой номер изотопа выбран
+
         if (checked_radio != last_checked_radio) {
             //если изменился изотоп, то зануляем параметры и пересчитываем аппаратную функцию
             second_channel_of_photopeak = 0;
@@ -119,6 +129,7 @@ $(function() {
             buf_m[i] = buf; //запомониаем у
             spectrum_points.push([i, buf]);
         } //вычисление 1ого шага
+
         plot = $.plot(placeholder, [
             {data: spectrum_points, label: "spectr(x) = -0.00"},
         ],options); //рисуем первый шаг
@@ -130,7 +141,7 @@ $(function() {
             for (var i = 0; i < 5000; i+= 1) {
                 //i+= Math.floor(3*Math.random());
                 buf = calc(i, a[1], a[2], a[3], a[4], a[5], a[6], a[7], 500);//посчитали шаг
-                if (second_channel_of_photopeak != 0) { //если это не 5 источник- добавляем ещё             один пик
+                if (second_channel_of_photopeak != 0) { //если это не 5 источник- добавляем ещё один пик вылета          один пик
                     buf += calc(i, a[12], a[22], a[32], a[42], a[52], a[62], a[72], 500);
                 }
                 buf = buf + Puas(buf);  //зашумили шаг

@@ -1,20 +1,73 @@
-* {	padding: 0; margin: 0; vertical-align: top; }
+* {	padding: 0; margin: 0; vertical-align: top;-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
 
 body {
-	background: url(background.png) repeat-x;
+  background: linear-gradient(to bottom, #b3ff96, #92d17a);
 	font: 18px/1.5em "proxima-nova", Helvetica, Arial, sans-serif;
     display: inline;
 }
-#header{
-    display: inline-block;
-    text-align: center;
-    width: 100%;
-    font-size: 1.2em;
-}
-#r1,#r2,#r3,#r4,#r5,#r6{
-    display: inline-block;
+
+/*******************HEADER************/
+#header {
+
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  font-size: 1.2em;
+  padding-bottom: 1%;
 
 }
+
+#header h4 {
+  padding-bottom: 1%;
+  padding-top: 1%;
+}
+/*************************/
+.spectrometr {
+  width: 100%;
+  border: 1px solid #1a6b1c;
+  display: inline-block;
+  height: 80%;
+}
+
+.spectrometr .left_col {
+  float: left;
+  display: table;
+  height: 100%;
+  width: 20%;
+  overflow: hidden;
+  position: relative;
+  border-right: 1px solid #1a6b1c;
+}
+
+/********INSIDE LEFT COLUMN***************/
+/**/
+
+.param {
+  padding-left: 2%;
+  margin-top: 10%;
+  height: 28%;
+  width: 100%;
+  border-bottom: 1px solid #1a6b1c;
+  padding-bottom: 2%;
+}
+.param  p {
+    margin-top: 1%;
+    margin-left: 4%;
+    display: inline-block;
+    text-align: center;
+    font-family: Helvetica, Arial, Sans-Serif;
+    font-size: 1.2em;
+  }
+
+#x_min,#x_max,#y_max,#time{
+
+  float: left;
+  width: 50%;
+  text-align: center;
+
+}
+
 .time-row{
     font-size: 1.5em;
     width: 100%;
@@ -38,8 +91,6 @@ body {
     width: 48%;
     text-align: center;
 }
-
-
 
 
 a {	color: #069; }
@@ -76,46 +127,8 @@ input[type=checkbox] {
 
 
 
-.spectrometr{
-    margin-top: 1%;
-    width: 100%;
-    border: 1px  solid #1a6b1c;
-    height: 85%;
-}
-.left_col{
-    float: left;
-    display: table;
-    height: 100%;
-    width: 20%;
-    overflow: hidden;
-    position: relative;
-    border-right: 1px solid #1a6b1c;
 
 
-}
-.param{
-    padding-left: 2%;
-    margin-top: 2%;
-    height: 28%;
-    width: 100%;
-    border-bottom: 1px solid #1a6b1c;
-    padding-bottom: 2%;
-}
-.param p{
-    margin-top: 1%;
-    margin-left: 4%;
-    display: inline-block;
-    text-align: center;
-    font-family: Helvetica, Arial, Sans-Serif;
-    font-size: 1.2em;
-}
-#x_min,#x_max,#y_max,#time{
-
-    float: left;
-    width: 50%;
-    text-align: center;
-
-}
 .zoom{
     height: 15%;
      padding-top: 2%;
@@ -140,10 +153,9 @@ input[type=checkbox] {
 	box-sizing: border-box;
 	width: 70%;
 	height: 90%;
-	padding: 20px 15px 15px 15px;
-	margin: 2% 2% 2% 0%;
-	border: 1px solid #ddd;
-	background: #fff;
+	//padding: 20px 15px 15px 15px;
+	margin: 2% 2% 2% 0;
+    border: 1px solid black;
 	background: linear-gradient(#f6f6f6 0, #fff 50px);
 	background: -o-linear-gradient(#f6f6f6 0, #fff 50px);
 	background: -ms-linear-gradient(#f6f6f6 0, #fff 50px);
@@ -160,10 +172,12 @@ input[type=checkbox] {
 }
 
 .demo-placeholder {
+    background-color: #b3ff96;
 	width: 100%;
 	height: 100%;
 	font-size: 14px;
 	line-height: 1.2em;
+    box-sizing: padding-box;
 }
 
 .legend table {
@@ -271,23 +285,32 @@ input[type=checkbox] {
     -webkit-border-radius: 28px;
     -moz-border-radius: 28px;
     border-radius: 28px;
-    font-family: Arial;
     width: 48%;
-    border: 2px solid #209a31 !important;
+    border: 2px solid #209a31;
     color: #222222;
     background: none;
     padding: 5px 10px 5px 10px;
     text-decoration: none;
-    border: hidden;
     font-size: 1em;
     font-weight: 700;
+    -webkit-transition:border 0.4s linear;
+    -o-transition:border 0.4s linear;
+    -moz-transition:border 0.4s linear;
+    transition:border 0.4s linear;
+  &:hover{
+    border: 2px solid #35ff51;
+  }
+
+  .active{
+    border: 2px solid #ff689d;
+  }
 }
 .btn.info{
     width: 60%;
     display: none;
 }
 .btn:hover {
-    border: 2px solid #35ff51 !important;
+
 }
 #clear{
     margin-top: 2%;
@@ -299,13 +322,12 @@ input[type=checkbox] {
     width: 100%;
 }
 .answer{
-    width: 100%;
+    background-color: #92D17A;
     width: 48%;
     border: 1px solid black;
     -webkit-border-radius: 28px;
     -moz-border-radius: 28px;
     border-radius: 28px;
-    font-family: Arial;
     text-align: center;
     padding: 5px 10px 5px 10px;
     margin-right: 1%;
