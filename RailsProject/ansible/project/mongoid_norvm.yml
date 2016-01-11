@@ -1,0 +1,11 @@
+---
+# ansible-playbook -u terra project/mongoid_norvm.yml --extra-vars 'target=terra'
+- hosts: '{{target}}'
+  vars:
+    app_path: '/data/{{ansible_user_id}}/app'
+    db_password: "{{ lookup('password', playbook_dir + '/../credentials/' + inventory_hostname + '/' + ansible_user_id + '_mongodb length=15') }}"
+  vars_files:
+    - "{{playbook_dir}}/../../db.yml"
+  roles:
+    - { role: mongoid }
+    - { role: env }
