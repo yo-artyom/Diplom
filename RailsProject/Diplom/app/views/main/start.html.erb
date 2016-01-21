@@ -1,0 +1,101 @@
+
+<div id="header">
+  <h4> Источники:</h4>
+  <input type="radio" checked="checked" name="raz" id="radio01" value="1"/>
+    <label for="radio01"><span></span>Сs-137</label>
+  <input type="radio" name="raz" id="radio02" value="2">
+    <label for="radio02"><span></span>Na-22</label>
+  <input type="radio" name="raz" id="radio03" value="3">
+    <label for="radio03"><span></span>№1</label>
+  <input type="radio" name="raz" id="radio04" value="4">
+    <label for="radio04"><span></span>№2</label>
+  <input type="radio" name="raz" id="radio05" value="5">
+    <label for="radio05"><span></span>№3</label>
+  <input type="radio" name="raz" id="radio06" value="6">
+    <label for="radio06"><span></span>№4</label>
+
+</div>
+
+
+  <div class="spectrometr">
+    <div class="left_col">
+      <div class="param">
+        <div class="row"><p>X min</p> <input type="number" value="0" id="x_min"></div>
+        <div class="row"><p>X max</p> <input type="number" value="5000" id="x_max"></div>
+        <div class="row"><p>Y max</p> <input type="number" value="5000" id="y_max"></div>
+        <div class="row"><p>Время</p> <input type="number" value="1000" id="time"></div>
+        </div>
+    <div class="zoom">
+      <button class="btn info" id="points-info">Информация</button>
+      <div class="squaredTwo">
+          <input id="squaredTwo" type="checkbox" name="check" checked>
+          <label for="squaredTwo"></label>
+        </div>
+        <p >Увеличить выбранную область</p>
+    </div>
+    <div class="time-row" >
+        <div class="cc">Время</div><p id="full-time"> 0 сек </p>
+    </div>
+    <div id="buttons">
+        <div class="build-buttons">
+            <button class="btn" id="build">Построить</button>
+            <button class="btn" id="stop">Стоп</button>
+            <button class="btn" id="clear">Очистить</button>
+        </div>
+        <div id="answer-field">
+            <input type="text" id="answer" class="answer">
+            <button class="btn" id="check">Ответить</button>
+        </div>
+
+    <!--<div id="warning-text"><p>Внимание! В ответе необходимо указать большую энергию пика</p></div>-->
+    </div>
+  </div>
+<div class="demo-container">
+  <div id="placeholder" class="demo-placeholder"></div>
+</div>
+</div>
+
+
+  <p id="hoverdata"></p>
+
+ <!-- <div id="description">
+    <form name="firstform">
+      <input type="text" id="text-field" value="тестовое поле">
+    </form>
+    <button id="test">test</button>
+    <h3>Что есть в программе:</h3>
+    <h4>новое от 19.04</h4>
+    <li>Добавлен пик обратного поглощения</li>
+    <li>Линии заменены на точки</li>
+    <h4>новое от 23.03</h4>
+        <li>изменен вид для ввода ответа</li>
+        <li>немного изменений в верстке</li>
+    <h4>новое от 22.03</h4>
+        <li> добавлена первая задача ( определение энергии пика)
+                    (энергия первого источника 0.6617 мэв)</li>
+      <h4>новое от 4.03</h4>
+      <li>добавлено масштабирование(довольно корявое)</li>
+      <h4>новое от 1.03</h4>
+      <ul>
+        <li>Добавлена возможность строить спектры с двумя пиками полного поглощения (источник №4 содержит два пика) </li>
+      </ul>
+      <h4> новое 25.02</h4>
+        <ul>
+          <li>Добавлена зависимость количества отсчётов от времени измерений </li>
+          <li>Масштаб по Y</li>
+        </ul>
+      <h4>cделано ранее:</h4>  
+      <ul>
+      <li>Моделируемый спектр зависит от выбора номера источника</li>
+      <li>Можно задавать максимальный и минимальный канал</li>
+      <li>Можно видеть количество отсчётов в зависимости от канала</li>
+      <li>Распределение точек по Пуассону</li>
+      <h4> Что хочу сделать:</h4>
+      <p>Масштабирование мышкой</p>
+      <p>Различные задания</p>
+      <p>Страницы с описаниями</p>
+      </ul>
+    </div>
+
+-->
+</div>
