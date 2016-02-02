@@ -1,4 +1,0 @@
-en:
-  unauthorized:
-    manage:
-      all: "У вас нет прав на действие %{action} над %{subject}."
