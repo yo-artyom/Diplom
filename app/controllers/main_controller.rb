@@ -1,4 +1,5 @@
 class MainController < ApplicationController
-  def start
+  def experiment
+    @sources = GammaSource.all
   end
 end

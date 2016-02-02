@@ -559,9 +559,9 @@ Licensed under the MIT license.
                 series: {
                     points: {
                         show: false,
-                        radius: 2,
-                        lineWidth: 1, // in pixels
-                        fill: false,
+                        radius: 3,
+                        lineWidth: 2, // in pixels
+                        fill: true,
                         fillColor: "#ffffff",
                         symbol: "circle" // or callback
                     },

@@ -1,0 +1,18 @@
+#header
+  h4 Источники:
+  = select_tag "sources", options_from_collection_for_select(@sources, "id", "name"), prompt: "Select something"
+.spectrometr
+  .left_col
+      .param
+        .row 
+          p X min
+           input type="number" value="0" id="x_min"
+        .row 
+          p X max
+            input type="number" value="5000" id="x_max"
+        .row
+          p Y max
+           input type="number" value="5000" id="y_max"
+        .row
+          p Время
+           input type="number" value="1000" id="time"
