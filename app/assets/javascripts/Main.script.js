@@ -2,23 +2,24 @@
 /**
  * Created by Artem Malyshev on 22.03.15.
  */
+//  TODO:
+//  * сделать кнопку построить неактивной, пока идет измерение
+//  *
 
-$(function() {
-    if (typeof $.fn.prop != 'function') {
-        $.fn.prop = $.fn.attr;
+ init = function(){
+    Array.prototype.set_zero = function(){
+      for (var i = 0; i < this.length; i++) {
+        this[i] = 0;
+      }
+     return true;
     }
-    $("#answer-field").hide();
-    $("#warning-text").hide();
+    function IsNumber(n){
+      return ( ( n === +n && n !== (n|0) ) || (n === +n && n === (n|0) ));
+    };
     var spectrum_points = [],// [канал, отсчеты]
         buf,    //буфер для вычислений
-        buf_m = new Array(5000), //буфер для хранения последних значений отсчётов
+        buf_old = new Array(5000), //буфер для хранения последних значений отсчётов
         peak_channel = 0, //канал пика
-
-        x_max = 1000,  //разрешение спектрометра
-        x_min = 0,
-        y_max = 5000,
-        y_min = 0,//стандартоное значение параметров
-
         last_checked_radio = 9696, //последний выбраный изотоп
         checked_radio, //выбранный изотоп в этом цикле измерений
         full_time = 0, //полное время измерения
@@ -28,37 +29,36 @@ $(function() {
         timeout,
         updateInterval = 800; //интервал обновления, мс
 
+    // объект для параметров спектрометра
+    var sp_params = function(){
+      this.x_max = 1000;
+      this.x_min = 0;
+      this.y_max = 5000;
+      this.y_min = 0;
+      this.validate = function(){
+        // if ((this.x_min < 0) || (IsNumber(this.x_min)) ){}
+      };
+    };
+
     var data = []; //массив для динамического обновления
-    var placeholder = $("#placeholder");
-    array_set_zero(buf_m);
+    var spectrometr = $("#spectrometr");
 
+    // нужно ли занулять массив при инициализации?
+    buf_old.set_zero();
 
-    //----Задаем цвет кнопки после нажатия-----////////
-    $('.btn').click(function(){
-        $(this).addClass('active');
-    });
-
-    $("#build").click(function () {
+    $("#build").on('click', function () {
+        // console.log("build start");
         var second_channel_of_photopeak = 0;
-        $("#answer").val("Ваш ответ");
         spectrum_points.length = 0;
-        x_min = $("#x_min").val();
-        x_max = $("#x_max").val();
-        y_min = $("#y_min").val();
-        y_max = $("#y_max").val();
+
+        sp_params.x_max = $("#x_max").val();
+        sp_params.y_min = $("#y_min").val();
+        sp_params.y_max = $("#y_max").val();
+
         time = $("#time").val(); //снимаем параметры
+
         //валидация параметров
-        if (x_min > x_max) {
-            return false;
-        }
-        if (x_max > 5000) {
-            x_max = 5000;
-            $("#x_max").val(5000);
-        }
-        if (x_min < 0) {
-            x_min = 0;
-            $("#x_min").val(0);
-        }
+        //
 
         var options = {
             series: {
@@ -72,11 +72,11 @@ $(function() {
             },
             yaxis: {
                 min: -200,
-                max: y_max
+                max: sp_params.y_max
             },
             xaxis: {
-                min: x_min,
-                max: x_max
+                min: sp_params.x_min,
+                max: sp_params.x_max
             },
             selection: {
                 mode: "x"
@@ -89,7 +89,7 @@ $(function() {
         if (checked_radio != last_checked_radio) {
             //если изменился изотоп, то зануляем параметры и пересчитываем аппаратную функцию
             second_channel_of_photopeak = 0;
-            array_set_zero(buf_m);
+            buf_old.set_zero();
             last_checked_radio = checked_radio;
             peak_channel = energy_to_channel(parseInt(checked_radio));
             spectrum_points.length = 0;
@@ -125,17 +125,17 @@ $(function() {
             if (second_channel_of_photopeak != 0) { //если это не 5 источник- добавляем ещё             один пик
                 buf += calc(i, a[12], a[22], a[32], a[42], a[52], a[62], a[72], 100);
             }
-            buf += buf_m[i] ;
-            buf_m[i] = buf; //запомониаем у
+            buf += buf_old[i] ;
+            buf_old[i] = buf; //запомониаем у
             spectrum_points.push([i, buf]);
         } //вычисление 1ого шага
 
-        plot = $.plot(placeholder, [
+        plot = $.plot(spectrometr, [
             {data: spectrum_points, label: "spectr(x) = -0.00"},
         ],options); //рисуем первый шаг
 
+        data.set_zero();
 
-        array_set_zero(data);
         function getSpectrumData() { //получаем значения спектра
             var res = [];
             for (var i = 0; i < 5000; i+= 1) {
@@ -147,8 +147,8 @@ $(function() {
                 buf = buf + Puas(buf);  //зашумили шаг
 
 
-                buf_m[i] += buf;  //к старому спектру добавили текущий шаг
-                buf = buf_m[i];
+                buf_old[i] += buf;  //к старому спектру добавили текущий шаг
+                buf = buf_old[i];
                 res.push([i, buf]);
                 spectrum_points.push([i, buf]);
             }
@@ -164,7 +164,7 @@ $(function() {
                 t += 100;
                 full_time += 100;
                 $("#full-time").text(full_time+" cек");
-                plot = $.plot(placeholder, [
+                plot = $.plot(spectrometr, [
                     {data: getSpectrumData(), label: "spectr(x) = -0.00"},
                 ], options);
                 $("#points-info").click();
@@ -174,10 +174,10 @@ $(function() {
         }
         update();
 
-        placeholder.bind("plotunselected", function (event) {
+        spectrometr.bind("plotunselected", function (event) {
             $("#selection").text("");
         });
-        placeholder.bind("plotselected", function (event, ranges) {
+        spectrometr.bind("plotselected", function (event, ranges) {
 
             $("#selection").text(ranges.xaxis.from.toFixed(1) + " to " + ranges.xaxis.to.toFixed(1));
 
@@ -206,7 +206,7 @@ $(function() {
     });
 
     $("#points-info").click(function () {
-        var legends = $("#placeholder .legendLabel");
+        var legends = $("#spectrometr .legendLabel");
         legends.each(function () {
             // fix the widths so they don't jump around
             $(this).css('width', $(this).width());
@@ -254,7 +254,7 @@ $(function() {
                 + ") = " + y.toFixed(0))); //заменяем поле информации канал(спектр)
             }
         }
-        $("#placeholder").bind("plothover",  function (event, pos, item) {
+        $("#spectrometr").bind("plothover",  function (event, pos, item) {
             latestPosition = pos;
             if (!updateLegendTimeout) {
                 updateLegendTimeout = setTimeout(updateLegend, 50);
@@ -262,8 +262,6 @@ $(function() {
         });
 
     });
-
-
 
     $("#clear").click(function () { //кнопка сброс
         clearTimeout(timeout);
@@ -278,26 +276,27 @@ $(function() {
 
         }; //убираем график
         spectrum_points.length = 0; //зануляем массив с точками
-        array_set_zero(buf_m); //зануляем буффер с последними точками
+        buf_old.set_zero(); //зануляем буффер с последними точками
 
-        plot = $.plot(placeholder, [
+        plot = $.plot(spectrometr, [
             {data: spectrum_points, label: "spectr(x) = -0.00"},
         ], options); //отрисовываем график
 
     });
+};
 
 
+$("#check").click(function () { // первая задача, проверка неизвестного источника
+  var answer = $("#answer").val();
 
-    $("#check").click(function () { // первая задача, проверка неизвестного источника
-        var answer = $("#answer").val();
-
-        var right_answer = calibration() * peak_channel;
-        if ((answer > (right_answer - right_answer * 0.1)) && (answer < (right_answer + right_answer * 0.1))) {
-            alert("верно");
-        }
-        else {
-            alert("неверно");
-        }
-    });
-
+  var right_answer = calibration() * peak_channel;
+  if ((answer > (right_answer - right_answer * 0.1)) && (answer < (right_answer + right_answer * 0.1))) {
+      alert("верно");
+  }
+  else {
+      alert("неверно");
+  }
 });
+
+
+$(document).on('page:change', init)

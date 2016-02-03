@@ -1,3 +1,5 @@
+
+
 var cs_peak_channel,
     puasson_parametr = 50*Math.random();
 //------вычисление отсчетов от времени--------------
@@ -81,12 +83,6 @@ function energy_to_channel(number){
     return energy;
 }
 
-function array_set_zero(array){
-    for (var i = 0; i < array.length - 1; i++) {
-        array[i] = 0;
-    }
-}
-
 function energy_to_channel_double_peak() {
     return 1.55 / calibration();
 }
@@ -98,4 +94,3 @@ function check_channel( answer, peak_channel, peak_on_channel ){
         buffer = 1;
     return buffer;
 }
-

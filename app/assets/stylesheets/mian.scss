@@ -2,7 +2,7 @@
 }
 
 body {
-  background: linear-gradient(to bottom, #b3ff96, #92d17a);
+  // background: linear-gradient(to bottom, #b3ff96, #92d17a);
 	font: 18px/1.5em "proxima-nova", Helvetica, Arial, sans-serif;
     display: inline;
 }
@@ -149,7 +149,7 @@ input[type=checkbox] {
     display: table;
 }
 
-.demo-container {
+.spectrometr-container {
 	box-sizing: border-box;
 	width: 70%;
 	height: 90%;
@@ -171,7 +171,7 @@ input[type=checkbox] {
     margin-left: 5%;
 }
 
-.demo-placeholder {
+.spectrometr-placeholder {
     background-color: #b3ff96;
 	width: 100%;
 	height: 500px;

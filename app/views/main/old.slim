@@ -1,9 +1,21 @@
 #header
-  h4 Источники:
-  = collection_radio_buttons nil ,nil ,@sources, :id, :name
+  h4
+    |  Источники:
+  input#r1[type="radio" checked="checked" name="raz" value="1"]
+  | Сs-137 
+  input#r2[type="radio" name="raz" value="2"]
+  | Na-22 
+  input#r3[type="radio" name="raz" value="3"]
+  | №1 
+  input#r4[type="radio" name="raz" value="4"]
+  | №2 
+  input#r5[type="radio" name="raz" value="5"]
+  | №3 
+  input#r5[type="radio" name="raz" value="6"]
+  | №4 
 .spectrometr
   .left_col
-    .params
+    .param
       .row
         p
           | X min
@@ -45,5 +57,5 @@
         input#answer.answer[type="text"]
         button#check.btn
           | Ответить
-  .spectrometr-container
-    #spectrometr.spectrometr-placeholder
+  .demo-container
+    #placeholder.demo-placeholder

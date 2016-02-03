@@ -1,0 +1,50 @@
+
+<div id="header">
+  <h4> Источники:</h4>
+  <input type="radio" checked="checked" name="raz" id="r1" value="1"/>Сs-137
+  <input type="radio" name="raz" id="r2" value="2">Na-22
+  <input type="radio" name="raz" id="r3" value="3">№1
+  <input type="radio" name="raz" id="r4" value="4">№2
+  <input type="radio" name="raz" id="r5" value="5">№3
+  <input type="radio" name="raz" id="r5" value="6">№4
+
+</div>
+
+
+  <div class="spectrometr">
+    <div class="left_col">
+      <div class="param">
+        <div class="row"><p>X min</p> <input type="number" value="0" id="x_min"></div>
+        <div class="row"><p>X max</p> <input type="number" value="5000" id="x_max"></div>
+        <div class="row"><p>Y max</p> <input type="number" value="5000" id="y_max"></div>
+        <div class="row"><p>Время</p> <input type="number" value="1000" id="time"></div>
+        </div>
+    <div class="zoom">
+      <button class="btn info" id="points-info">Информация</button>
+      <div class="squaredTwo">
+          <input id="squaredTwo" type="checkbox" name="check" checked>
+          <label for="squaredTwo"></label>
+        </div>
+        <p >Увеличить выбранную область</p>
+    </div>
+    <div class="time-row" >
+        <div class="cc">Время</div><p id="full-time"> 0 сек </p>
+    </div>
+    <div id="buttons">
+        <div class="build-buttons">
+            <button class="btn" id="build">Построить</button>
+            <button class="btn" id="stop">Стоп</button>
+            <button class="btn" id="clear">Очистить</button>
+        </div>
+        <div id="answer-field">
+            <input type="text" id="answer" class="answer">
+            <button class="btn" id="check">Ответить</button>
+        </div>
+
+    <!--<div id="warning-text"><p>Внимание! В ответе необходимо указать большую энергию пика</p></div>-->
+    </div>
+  </div>
+<div class="demo-container">
+  <div id="placeholder" class="demo-placeholder"></div>
+</div>
+</div>
