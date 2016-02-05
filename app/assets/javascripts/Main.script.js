@@ -43,6 +43,25 @@
     var data = []; //массив для динамического обновления
     var spectrometr = $("#spectrometr");
 
+    var options = {
+        series: {
+            points: {show: true},
+            shadowSize: 0
+        },
+        crosshair: {mode: "x"},
+        grid: {
+            hoverable: true,
+            autoHighlight: true
+        },
+        yaxis: {
+            min: -200
+        },
+        selection: {
+            mode: "x"
+        },
+        colors: ["#209a31"]
+    };//параметры графика
+
     // нужно ли занулять массив при инициализации?
     buf_old.set_zero();
 
@@ -56,33 +75,21 @@
         sp_params.y_max = $("#y_max").val();
 
         time = $("#time").val(); //снимаем параметры
-
         //валидация параметров
-        //
+        // sp_params.validate();
 
-        var options = {
-            series: {
-                points: {show: true},
-                shadowSize: 0
-            },
-            crosshair: {mode: "x"},
-            grid: {
-                hoverable: true,
-                autoHighlight: true
-            },
+        //добавляем опции к графику
+        options_new = {
             yaxis: {
-                min: -200,
                 max: sp_params.y_max
             },
             xaxis: {
                 min: sp_params.x_min,
                 max: sp_params.x_max
-            },
-            selection: {
-                mode: "x"
-            },
-            colors: ["#209a31"]
-        };//параметры графика
+            }
+        };
+        $.extend(options, options_new);
+
 
         checked_radio = $('input[name="raz"]:checked').val(); //какой номер изотопа выбран
 
